@@ -11,9 +11,8 @@ setuptools.setup(
      description="Plugin for pytest",
      long_description=long_description,
      long_description_content_type='text/markdown',
-     url='https://github.com/pytest-dev/pytest-twisted',
-     py_modules=['pytest_tests_execution_flow'],
-     entry_points={'pytest11': ['pytest_test_execution_flow = pytest_test_execution_flow']},
+     py_modules=['pytest_test_execution_flow'],
+     entry_points={'pytest11': ['execution_flow = pytest_test_execution_flow']},
      install_requires=[
        'pytest>=4.1.0'
      ]
