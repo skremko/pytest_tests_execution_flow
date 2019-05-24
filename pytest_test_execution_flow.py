@@ -71,7 +71,6 @@ class SequenceManager:
                         self.reason = action.__name__
                         break
 
-    @pytest.hookimpl(tryfirst=True, hookwrapper=True)
     def pytest_runtest_call(self, item):
         if self.action:
             msg = 'This test {0}ed because test - {1} was failed!'.format(self.reason, item.name)
