@@ -3,11 +3,6 @@
 pytest-tests-execution-flow
 ==============================================================================
 
-:Authors: Sergii Kremko
-:Version: 0.0.1
-:Code: https://github.com/skremko/pytest_tests_execution_flow
-
-
 pytest-tests-execution-flow is a plugin for pytest, which allows to set tests that
 must be started at the beginning and end of the session. The plugin also provides two marks
 `skip_all_after_this_fail` and `fail_all_after_this_fail`, which allows you to skip\fail
@@ -31,9 +26,7 @@ Usage
 ==============================================================================
 Prepare the config file :code:`pytest.ini` in root directory of tests
 
-Example of :code:`pytest.ini`:
-
-.. code-block:: text
+Example of `pytest.ini`:
 
     [pytest]
     run_at_start=
