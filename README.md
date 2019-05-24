@@ -24,7 +24,7 @@ Install the plugin with::
 
 Usage
 ==============================================================================
-Prepare the config file :code:`pytest.ini` in root directory of tests
+Prepare the config file `pytest.ini` in root directory of tests
 
 Example of `pytest.ini`:
 
