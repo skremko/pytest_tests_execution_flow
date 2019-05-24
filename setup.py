@@ -14,9 +14,7 @@ setuptools.setup(
      long_description_content_type="text/markdown",
      url="https://github.com/javatechy/dokr",
      entry_points={'pytest11': ['pytest_sequencing = pytest_sequencing.plugin']},
-     classifiers=[
-         "Programming Language :: Python :: 3",
-         "License :: OSI Approved :: MIT License",
-         "Operating System :: OS Independent",
-     ],
+     install_requires=[
+       'pytest>=4.1.0'
+     ]
  )
