@@ -70,6 +70,10 @@ class SequenceManager:
                         self.action = action
                         self.reason = action.__name__
                         break
+                                            
+    def pytest_runtest_setup(self, item):
+        if self.action:
+            item.fixturenames[:] = []
 
     def pytest_runtest_call(self, item):
         if self.action:
