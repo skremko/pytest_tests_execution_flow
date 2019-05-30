@@ -63,8 +63,8 @@ class SequenceManager:
     def pytest_runtest_makereport(self, item, call):
         outcome = yield
         res = outcome.get_result()
-        if res.when == 'call':
-            if res.outcome == 'failed' and not self.action:
+        if res.when == 'call' or res.when == 'setup':
+            if res.outcome != 'passed' and not self.action:
                 for mark, action in MARKS.items():
                     if item.get_closest_marker(mark):
                         self.action = action
