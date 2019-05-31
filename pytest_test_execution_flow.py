@@ -41,6 +41,7 @@ class SequenceManager:
     def __init__(self, run_at_start, run_at_end):
         self.action = None
         self.reason = None
+        self.failed_item = None
         self.run_at_start = run_at_start
         self.run_at_end = [i for i in run_at_end if i not in run_at_start]
 
@@ -69,6 +70,7 @@ class SequenceManager:
                     if item.get_closest_marker(mark):
                         self.action = action
                         self.reason = action.__name__
+                        self.failed_item = item
                         break
                                             
     def pytest_runtest_setup(self, item):
@@ -77,5 +79,5 @@ class SequenceManager:
 
     def pytest_runtest_call(self, item):
         if self.action:
-            msg = 'This test {0}ed because test - {1} was failed!'.format(self.reason, item.name)
+            msg = 'This test {0}ed because test - {1} was failed!'.format(self.reason, self.failed_item.name)
             self.action(msg)
