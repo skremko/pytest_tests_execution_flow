@@ -1,11 +1,21 @@
+import pkg_resources
 import pytest
-
 
 MARKS = {
     'skip_all_after_this_fail': pytest.skip,
     'fail_all_after_this_fail': pytest.fail,
 }
 
+
+def is_rerunning(item):
+    try:
+        pkg_resources.get_distribution('pytest-rerunfailures')
+        from pytest_rerunfailures import get_reruns_count
+        if get_reruns_count(item) and item.execution_count <= get_reruns_count(item):
+            return True
+        return False
+    except (pkg_resources.DistributionNotFound, ImportError):
+        return False
 
 def pytest_addoption(parser):
     parser.addini(
@@ -64,6 +74,8 @@ class SequenceManager:
         outcome = yield
         res = outcome.get_result()
         if res.when == 'call':
+            if is_rerunning(item):
+                return
             if res.outcome == 'failed' and not self.action:
                 for mark, action in MARKS.items():
                     if item.get_closest_marker(mark):
