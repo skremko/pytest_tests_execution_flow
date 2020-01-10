@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
      name='pytest-tests-execution-flow',
-     version='0.0.1',
+     version='0.0.2',
      author="Sergii Kremko",
      author_email="sergii.kremko@gmail.com",
      description="Plugin for pytest",
