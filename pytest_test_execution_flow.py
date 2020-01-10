@@ -1,11 +1,21 @@
+import pkg_resources
 import pytest
-
 
 MARKS = {
     'skip_all_after_this_fail': pytest.skip,
     'fail_all_after_this_fail': pytest.fail,
 }
 
+
+def is_rerunning(item):
+    try:
+        pkg_resources.get_distribution('pytest-rerunfailures')
+        from pytest_rerunfailures import get_reruns_count
+        if get_reruns_count(item) and item.execution_count <= get_reruns_count(item):
+            return True
+        return False
+    except (pkg_resources.DistributionNotFound, ImportError):
+        return False
 
 def pytest_addoption(parser):
     parser.addini(
@@ -41,7 +51,6 @@ class SequenceManager:
     def __init__(self, run_at_start, run_at_end):
         self.action = None
         self.reason = None
-        self.failed_item = None
         self.run_at_start = run_at_start
         self.run_at_end = [i for i in run_at_end if i not in run_at_start]
 
@@ -64,20 +73,18 @@ class SequenceManager:
     def pytest_runtest_makereport(self, item, call):
         outcome = yield
         res = outcome.get_result()
-        if res.when == 'call' or res.when == 'setup':
-            if res.outcome != 'passed' and not self.action:
+        if res.when == 'call':
+            if is_rerunning(item):
+                return
+            if res.outcome == 'failed' and not self.action:
                 for mark, action in MARKS.items():
                     if item.get_closest_marker(mark):
                         self.action = action
                         self.reason = action.__name__
-                        self.failed_item = item
                         break
-                                            
+
+    @pytest.hookimpl(tryfirst=True, hookwrapper=True)
     def pytest_runtest_setup(self, item):
         if self.action:
-            item.fixturenames[:] = []
-
-    def pytest_runtest_call(self, item):
-        if self.action:
-            msg = 'This test {0}ed because test - {1} was failed!'.format(self.reason, self.failed_item.name)
+            msg = 'This test {0}ed because test - {1} was failed!'.format(self.reason, item.name)
             self.action(msg)
