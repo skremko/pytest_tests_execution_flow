@@ -74,6 +74,8 @@ class SequenceManager:
         outcome = yield
         res = outcome.get_result()
         if res.when == 'call' or res.when == 'setup':
+            if is_rerunning(item):
+                return
             if res.outcome == 'failed' and not self.action:
                 for mark, action in MARKS.items():
                     if item.get_closest_marker(mark):
